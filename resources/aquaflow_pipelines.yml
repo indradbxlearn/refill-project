@@ -3,6 +3,7 @@ resources:
     # THE BRONZE PIPELINE
     aquaflow_bronze_pipe:
       name: "[${var.env}] Aquaflow Bronze Loader"
+      catalog: ${var.catalog_name}
       target: bronze_aquaflow 
       serverless: true
       libraries:
@@ -15,6 +16,7 @@ resources:
     # THE SILVER PIPELINE
     aquaflow_silver_pipe:
       name: "[${var.env}] Aquaflow Silver Transformer"
+      catalog: ${var.catalog_name}
       target: silver_aquaflow
       serverless: true
       libraries:
