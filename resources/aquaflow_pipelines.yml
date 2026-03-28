@@ -7,7 +7,7 @@ resources:
       target: bronze_aquaflow 
       serverless: true
       libraries:
-        - file:
+        - notebook:
             path: ../src/bronze_loaders/aquaflow/loader.py
       configuration:
         bundle.catalog: ${var.catalog_name}
@@ -20,7 +20,7 @@ resources:
       target: silver_aquaflow
       serverless: true
       libraries:
-        - file:
+        - notebook:
             path: ../src/silver_loaders/aquaflow/transformer.py
       configuration:
         bundle.catalog: ${var.catalog_name}
