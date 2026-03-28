@@ -1,0 +1,17 @@
+schema: silver_aquaflow
+tables:
+  - name: flow_init_setup_clean
+    source_table: flow_init_setup
+    columns:
+      setup_id: STRING
+      technician_name: STRING
+      is_active: BOOLEAN
+      recorded_at: TIMESTAMP
+
+  - name: pressure_kpi_tracker_clean
+    source_table: pressure_kpi_tracker
+    columns:
+      customer_id: INT
+      kpi_score: DOUBLE
+      status: STRING
+      event_date: DATE
