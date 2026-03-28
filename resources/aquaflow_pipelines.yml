@@ -1,0 +1,40 @@
+resources:
+  pipelines:
+    # THE BRONZE PIPELINE
+    aquaflow_bronze_pipe:
+      name: "[${var.env}] Aquaflow Bronze Loader"
+      catalog: ${var.catalog_name}
+      target: bronze_aquaflow 
+      serverless: true
+      libraries:
+        - notebook:
+            path: ../src/bronze_loaders/aquaflow/loader.py
+      configuration:
+        bundle.catalog: ${var.catalog_name}
+      development: true
+
+    # THE SILVER PIPELINE
+    aquaflow_silver_pipe:
+      name: "[${var.env}] Aquaflow Silver Transformer"
+      catalog: ${var.catalog_name}
+      target: silver_aquaflow
+      serverless: true
+      libraries:
+        - notebook:
+            path: ../src/silver_loaders/aquaflow/transformer.py
+      configuration:
+        bundle.catalog: ${var.catalog_name}
+      development: true
+    
+    # THE GOLD PIPELINE
+    aquaflow_gold_pipe:
+      name: "[${var.env}] Aquaflow Gold Reporter"
+      catalog: ${var.catalog_name}
+      target: gold_aquaflow
+      serverless: true
+      libraries:
+        - notebook:
+            path: ../src/gold_loaders/aquaflow/gold_loader.py
+      configuration:
+        bundle.catalog: ${var.catalog_name}
+      development: true

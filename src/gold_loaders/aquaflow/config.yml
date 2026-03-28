@@ -1,0 +1,6 @@
+gold_views:
+  - name: technician_performance_report
+    description: "Joins technician details with pressure KPI scores for executive reporting"
+    primary_source: flow_init_setup_clean
+    secondary_source: pressure_kpi_tracker_clean
+    join_key: setup_id

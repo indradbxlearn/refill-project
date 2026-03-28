@@ -1,0 +1,38 @@
+bundle:
+  name: refill_project
+
+# Fix 1: include must be at the bundle level, not inside resources
+include:
+  - resources/*.yml
+
+# Fix 2: You must declare variables here before assigning them in targets
+variables:
+  catalog_name:
+    description: The catalog to deploy to
+    default: bi_dev
+  env:
+    description: The environment name
+    default: dev
+
+targets:
+  dev:
+    default: true
+    workspace:
+      host: https://dbc-0d473c91-2622.cloud.databricks.com
+    variables:
+      catalog_name: bi_dev
+      env: dev
+
+  qa:
+    workspace:
+      host: https://dbc-0d473c91-2622.cloud.databricks.com
+    variables:
+      catalog_name: bi_qa
+      env: qa
+
+  prod:
+    workspace:
+      host: https://dbc-0d473c91-2622.cloud.databricks.com
+    variables:
+      catalog_name: bi_prod
+      env: prod
