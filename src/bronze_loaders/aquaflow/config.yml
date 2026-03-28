@@ -1,0 +1,11 @@
+schema: bronze_aquaflow
+source_system: aquaflow
+reader_options:
+  format: parquet
+tables:
+  - name: flow_init_setup
+  - name: pressure_kpi_tracker
+  - name: dispenser_cleaning_logs
+  - name: customer_service_center
+  - name: eservice_logs
+  - name: normal_delivery_schedule

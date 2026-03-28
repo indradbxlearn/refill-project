@@ -1,0 +1,33 @@
+bundle:
+  name: refill_project
+
+# This section tells the bundle where your DLT pipelines and Jobs are defined
+resources:
+  include:
+    - resources/*.yml
+
+targets:
+  # Development: points to bi_dev
+  dev:
+    default: true
+    workspace:
+      host: https://dbc-0d473c91-2622.cloud.databricks.com
+    variables:
+      catalog_name: bi_dev
+      env: dev
+
+  # QA: points to bi_qa
+  qa:
+    workspace:
+      host: https://dbc-0d473c91-2622.cloud.databricks.com
+    variables:
+      catalog_name: bi_qa
+      env: qa
+
+  # Production: points to bi_prod
+  prod:
+    workspace:
+      host: https://dbc-0d473c91-2622.cloud.databricks.com
+    variables:
+      catalog_name: bi_prod
+      env: prod
