@@ -30,9 +30,11 @@ resources:
     aquaflow_gold_pipe:
       name: "[${var.env}] Aquaflow Gold Reporter"
       catalog: ${var.catalog_name}
-      target: gold_aquaflow # This declaratively creates the bi_dev.gold_aquaflow schema
+      target: gold_aquaflow
       serverless: true
       libraries:
         - notebook:
             path: ../src/gold_loaders/aquaflow/gold_loader.py
+      configuration:
+        bundle.catalog: ${var.catalog_name}
       development: true

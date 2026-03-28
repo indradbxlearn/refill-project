@@ -1,4 +1,3 @@
-# Gold Layer Logic Configuration
 gold_views:
   - name: technician_performance_report
     description: "Joins technician details with pressure KPI scores for executive reporting"
