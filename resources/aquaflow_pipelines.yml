@@ -5,7 +5,7 @@ resources:
       name: "[${var.env}] Aquaflow Bronze Loader"
       target: bronze_aquaflow 
       libraries:
-        - notebook:
+        - file: # Changed from 'notebook' to 'file' for .py files
             path: ../src/bronze_loaders/aquaflow/loader.py
       configuration:
         bundle.catalog: ${var.catalog_name}
@@ -16,10 +16,8 @@ resources:
       name: "[${var.env}] Aquaflow Silver Transformer"
       target: silver_aquaflow
       libraries:
-        - notebook:
+        - file: # Changed from 'notebook' to 'file'
             path: ../src/silver_loaders/aquaflow/transformer.py
       configuration:
         bundle.catalog: ${var.catalog_name}
-      # This creates a dependency so Silver waits for Bronze
-      depends_on:
-        - pipeline: aquaflow_bronze_pipe
+      development: true

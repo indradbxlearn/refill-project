@@ -1,13 +1,20 @@
 bundle:
   name: refill_project
 
-# This section tells the bundle where your DLT pipelines and Jobs are defined
-resources:
-  include:
-    - resources/*.yml
+# Fix 1: include must be at the bundle level, not inside resources
+include:
+  - resources/*.yml
+
+# Fix 2: You must declare variables here before assigning them in targets
+variables:
+  catalog_name:
+    description: The catalog to deploy to
+    default: bi_dev
+  env:
+    description: The environment name
+    default: dev
 
 targets:
-  # Development: points to bi_dev
   dev:
     default: true
     workspace:
@@ -16,7 +23,6 @@ targets:
       catalog_name: bi_dev
       env: dev
 
-  # QA: points to bi_qa
   qa:
     workspace:
       host: https://dbc-0d473c91-2622.cloud.databricks.com
@@ -24,7 +30,6 @@ targets:
       catalog_name: bi_qa
       env: qa
 
-  # Production: points to bi_prod
   prod:
     workspace:
       host: https://dbc-0d473c91-2622.cloud.databricks.com
