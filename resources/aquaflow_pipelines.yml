@@ -4,8 +4,9 @@ resources:
     aquaflow_bronze_pipe:
       name: "[${var.env}] Aquaflow Bronze Loader"
       target: bronze_aquaflow 
+      serverless: true
       libraries:
-        - file: # Changed from 'notebook' to 'file' for .py files
+        - file:
             path: ../src/bronze_loaders/aquaflow/loader.py
       configuration:
         bundle.catalog: ${var.catalog_name}
@@ -15,8 +16,9 @@ resources:
     aquaflow_silver_pipe:
       name: "[${var.env}] Aquaflow Silver Transformer"
       target: silver_aquaflow
+      serverless: true
       libraries:
-        - file: # Changed from 'notebook' to 'file'
+        - file:
             path: ../src/silver_loaders/aquaflow/transformer.py
       configuration:
         bundle.catalog: ${var.catalog_name}
