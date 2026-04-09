@@ -8,7 +8,7 @@ resources:
       serverless: true
       libraries:
         - notebook:
-            path: ../src/bronze_loaders/aquaflow/loader.py
+            path: ../../src/bronze_loaders/aquaflow/loader.py
       configuration:
         bundle.catalog: ${var.catalog_name}
       development: true
@@ -21,7 +21,7 @@ resources:
       serverless: true
       libraries:
         - notebook:
-            path: ../src/silver_loaders/aquaflow/transformer.py
+            path: ../../src/silver_loaders/aquaflow/transformer.py
       configuration:
         bundle.catalog: ${var.catalog_name}
       development: true
@@ -34,7 +34,7 @@ resources:
       serverless: true
       libraries:
         - notebook:
-            path: ../src/gold_loaders/aquaflow/gold_loader.py
+            path: ../../src/gold_loaders/aquaflow/gold_loader.py
       configuration:
         bundle.catalog: ${var.catalog_name}
       development: true
