@@ -1,4 +1,9 @@
 # Databricks notebook source
+# MAGIC %md
+# MAGIC ### This notebook is for creating the source files in volume which will be later consumed by the bronze jobs
+
+# COMMAND ----------
+
 # Databricks notebook source
 # 1. SQL Setup for Infrastructure
 # Using spark.sql to run the DDL commands

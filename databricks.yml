@@ -1,11 +1,11 @@
 bundle:
   name: refill_project
 
-# Fix 1: include must be at the bundle level, not inside resources
+# UPDATED: We now point to the sub-folders inside resources
 include:
-  - resources/*.yml
+  - resources/pipelines/*.yml
+  - resources/jobs/*.yml
 
-# Fix 2: You must declare variables here before assigning them in targets
 variables:
   catalog_name:
     description: The catalog to deploy to

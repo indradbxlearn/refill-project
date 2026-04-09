@@ -1,0 +1,27 @@
+resources:
+  jobs:
+    aquaflow_master_job:
+      name: "[${var.env}] Aquaflow Master Job"
+      
+      # Schedule details
+      schedule:
+        quartz_cron_expression: "0 0 6 * * ?" # Runs every day at 6:00 AM
+        timezone_id: America/New_York
+        pause_status: PAUSED # it is PAUSED in DEV so it doesn't waste money!
+      
+      tasks:
+        - task_key: bronze_ingestion
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.aquaflow_bronze_pipe.id}
+        
+        - task_key: silver_transformation
+          depends_on:
+            - task_key: bronze_ingestion
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.aquaflow_silver_pipe.id}
+
+        - task_key: gold_reporting
+          depends_on:
+            - task_key: silver_transformation
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.aquaflow_gold_pipe.id}
