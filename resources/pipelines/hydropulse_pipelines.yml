@@ -1,0 +1,17 @@
+resources:
+  pipelines:
+    hydropulse_medallion_pipe:
+      name: "[${var.env}] HydroPulse Medallion"
+      catalog: ${var.catalog_name}
+      target: hydropulse_refined
+      serverless: true
+      libraries:
+        - notebook:
+            path: ../../src/bronze_loaders/hydropulse/hp_bronze_loader.py
+        - notebook:
+            path: ../../src/silver_loaders/hydropulse/transformer.py
+        - notebook:
+            path: ../../src/gold_loaders/hydropulse/gold_loader.py
+      configuration:
+        bundle.target: ${var.env}
+        bundle.catalog: ${var.catalog_name}
