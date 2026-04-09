@@ -1,0 +1,13 @@
+resources:
+  jobs:
+    hydropulse_master_job:
+      name: "[${var.env}] HydroPulse Master Job"
+      schedule:
+        quartz_cron_expression: "0 15 22 * * ?" 
+        timezone_id: America/New_York
+        pause_status: PAUSED
+      tasks:
+        - task_key: run_hydropulse_medallion
+          pipeline_task:
+            # This one ID represents all 3 layers combined
+            pipeline_id: ${resources.pipelines.hydropulse_medallion_pipe.id}
