@@ -1,0 +1,38 @@
+resources:
+  jobs:
+    flowstream_job:
+      name: "[${var.env}] Flowstream Orchestration Job"
+      tags:
+        project: flowstream
+        env: ${var.env}
+
+      environments:
+        - environment_key: serverless
+          spec:
+            client: "2"
+
+      tasks:
+        - task_key: bronze_ingestion
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.flowstream_bronze_pipe.id}
+
+        - task_key: silver_transformation
+          depends_on:
+            - task_key: bronze_ingestion
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.flowstream_silver_pipe.id}
+
+        - task_key: gold_aggregation
+          depends_on:
+            - task_key: silver_transformation
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.flowstream_gold_pipe.id}
+
+        - task_key: optimize_vacuum
+          depends_on:
+            - task_key: gold_aggregation
+          notebook_task:
+            notebook_path: ../../src/gold_loaders/flowstream/optimize_vacuum.py
+            base_parameters:
+              catalog_name: ${var.catalog_name}
+          environment_key: serverless

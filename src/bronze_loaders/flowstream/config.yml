@@ -1,0 +1,9 @@
+schema: bronze_flowstream
+source_system: flowstream
+reader_options:
+  format: json
+tables:
+  - name: orders_raw
+  - name: order_events_raw
+  - name: products_raw
+  - name: customers_raw

@@ -1,0 +1,40 @@
+resources:
+  pipelines:
+    # THE BRONZE PIPELINE
+    flowstream_bronze_pipe:
+      name: "[${var.env}] Flowstream Bronze Loader"
+      catalog: ${var.catalog_name}
+      target: bronze_flowstream
+      serverless: true
+      libraries:
+        - notebook:
+            path: ../../src/bronze_loaders/flowstream/loader.py
+      configuration:
+        bundle.catalog: ${var.catalog_name}
+      development: true
+
+    # THE SILVER PIPELINE
+    flowstream_silver_pipe:
+      name: "[${var.env}] Flowstream Silver Transformer"
+      catalog: ${var.catalog_name}
+      target: silver_flowstream
+      serverless: true
+      libraries:
+        - notebook:
+            path: ../../src/silver_loaders/flowstream/transformer.py
+      configuration:
+        bundle.catalog: ${var.catalog_name}
+      development: true
+
+    # THE GOLD PIPELINE
+    flowstream_gold_pipe:
+      name: "[${var.env}] Flowstream Gold Loader"
+      catalog: ${var.catalog_name}
+      target: gold_flowstream
+      serverless: true
+      libraries:
+        - notebook:
+            path: ../../src/gold_loaders/flowstream/gold_loader.py
+      configuration:
+        bundle.catalog: ${var.catalog_name}
+      development: true
