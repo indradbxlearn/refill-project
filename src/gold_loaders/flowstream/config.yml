@@ -1,0 +1,37 @@
+schema: gold_flowstream
+silver_schema: silver_flowstream
+
+gold_views:
+  - name: daily_revenue_summary
+    description: "Daily revenue aggregated by country and order status"
+    primary_source: orders_clean
+    join_source: customers_clean
+    join_key: customer_id
+    partition_by: null                  # removed — conflicts with liquid clustering
+    liquid_clustering:
+      enabled: true
+      cluster_by:
+        - order_date
+        - country_code
+
+  - name: order_status_pivot
+    description: "Count of orders per status per day — operational health view"
+    primary_source: orders_clean
+    join_source: null
+    join_key: null
+    z_order:
+      enabled: true
+      columns:
+        - order_status
+        - order_date
+
+  - name: product_performance
+    description: "Revenue and volume per product joined with catalog details"
+    primary_source: orders_clean
+    join_source: products_clean
+    join_key: product_id
+    liquid_clustering:
+      enabled: true
+      cluster_by:
+        - product_id
+        - category
