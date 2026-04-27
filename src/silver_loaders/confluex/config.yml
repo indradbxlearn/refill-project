@@ -1,0 +1,96 @@
+schema: silver_confluex
+source_schema: bronze_confluex
+
+tables:
+  # ── products_clean ──────────────────────────────────────────────────────────
+  - name: products_clean
+    source_table: products_raw
+    cdc:
+      enabled: true
+      keys:
+        - product_id
+      sequence_by: updated_at
+      stored_as_scd_type: 1
+    liquid_clustering:
+      enabled: true
+      cluster_by:
+        - product_id
+        - category
+    expectations:
+      - name: valid_product_id
+        constraint: "product_id IS NOT NULL"
+        action: drop
+      - name: valid_price
+        constraint: "unit_price > 0"
+        action: warn
+    columns:
+      product_id:     string
+      product_name:   string
+      category:       string
+      unit_price:     double
+      stock_quantity: int
+      updated_at:     timestamp
+      _source:        string
+
+  # ── users_clean ─────────────────────────────────────────────────────────────
+  - name: users_clean
+    source_table: users_raw
+    cdc:
+      enabled: true
+      keys:
+        - user_id
+      sequence_by: updated_at
+      stored_as_scd_type: 1
+    liquid_clustering:
+      enabled: false
+    partition_by: country_code
+    expectations:
+      - name: valid_user_id
+        constraint: "user_id IS NOT NULL"
+        action: drop
+      - name: valid_email
+        constraint: "email IS NOT NULL"
+        action: warn
+    columns:
+      user_id:        string
+      first_name:     string
+      last_name:      string
+      email:          string
+      country_code:   string
+      segment:        string
+      status:         string
+      registered_at:  timestamp
+      updated_at:     timestamp
+      _source:        string
+
+  # ── carts_clean ─────────────────────────────────────────────────────────────
+  - name: carts_clean
+    source_table: carts_raw
+    cdc:
+      enabled: true
+      keys:
+        - cart_id
+      sequence_by: updated_at
+      stored_as_scd_type: 1
+    liquid_clustering:
+      enabled: true
+      cluster_by:
+        - user_id
+        - cart_status
+    expectations:
+      - name: valid_cart_id
+        constraint: "cart_id IS NOT NULL"
+        action: drop
+      - name: valid_amount
+        constraint: "total_amount > 0"
+        action: warn
+    columns:
+      cart_id:        string
+      user_id:        string
+      product_id:     string
+      quantity:       int
+      total_amount:   double
+      cart_status:    string
+      created_at:     timestamp
+      updated_at:     timestamp
+      _source:        string

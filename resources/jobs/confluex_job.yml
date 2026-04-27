@@ -1,0 +1,62 @@
+resources:
+  jobs:
+    confluex_job:
+      name: "[${var.env}] Confluex Orchestration Job"
+      tags:
+        project: confluex
+        env: ${var.env}
+
+      environments:
+        - environment_key: serverless
+          spec:
+            client: "2"
+
+      tasks:
+        # TASK 1: Create source registry table (idempotent — safe to run every time)
+        - task_key: create_registry
+          notebook_task:
+            notebook_path: ../../src/bronze_loaders/confluex/create_source_registry.py
+            base_parameters:
+              catalog_name: ${var.catalog_name}
+          environment_key: serverless
+
+        # TASK 2: Scan all sources, read _metadata.json, register into source_registry
+        - task_key: onboard_sources
+          depends_on:
+            - task_key: create_registry
+          notebook_task:
+            notebook_path: ../../src/bronze_loaders/confluex/onboard_sources.py
+            base_parameters:
+              catalog_name: ${var.catalog_name}
+          environment_key: serverless
+
+        # TASK 3: Bronze pipeline — dynamically routes to correct reader per source
+        - task_key: bronze_ingestion
+          depends_on:
+            - task_key: onboard_sources
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.confluex_bronze_pipe.id}
+
+        # TASK 4: Silver pipeline
+        - task_key: silver_transformation
+          depends_on:
+            - task_key: bronze_ingestion
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.confluex_silver_pipe.id}
+
+        # TASK 5: Gold pipeline
+        - task_key: gold_aggregation
+          depends_on:
+            - task_key: silver_transformation
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.confluex_gold_pipe.id}
+
+        # TASK 6: Optimize + Vacuum Silver tables
+        - task_key: optimize_vacuum
+          depends_on:
+            - task_key: gold_aggregation
+          notebook_task:
+            notebook_path: ../../src/gold_loaders/confluex/optimize_vacuum.py
+            base_parameters:
+              catalog_name: ${var.catalog_name}
+          environment_key: serverless

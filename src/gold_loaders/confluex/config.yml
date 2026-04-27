@@ -1,0 +1,43 @@
+schema: gold_confluex
+silver_schema: silver_confluex
+
+gold_views:
+  # ── source_contribution_summary ─────────────────────────────────────────────
+  # Answers: How many records came from each source type?
+  # This is the KEY gold table that proves our multi-source architecture
+  - name: source_contribution_summary
+    description: "Record count and revenue contribution per source across all entities"
+    primary_source: carts_clean
+    join_source: null
+    join_key: null
+    liquid_clustering:
+      enabled: true
+      cluster_by:
+        - _source
+        - cart_status
+
+  # ── product_cart_summary ─────────────────────────────────────────────────────
+  # Answers: Which products are most purchased? From which source?
+  - name: product_cart_summary
+    description: "Product performance — revenue and units sold across all sources"
+    primary_source: carts_clean
+    join_source: products_clean
+    join_key: product_id
+    liquid_clustering:
+      enabled: true
+      cluster_by:
+        - product_id
+        - category
+
+  # ── user_purchase_summary ────────────────────────────────────────────────────
+  # Answers: Which users are most active? From which country/segment?
+  - name: user_purchase_summary
+    description: "User purchase behaviour — total spend and cart count per user"
+    primary_source: carts_clean
+    join_source: users_clean
+    join_key: user_id
+    liquid_clustering:
+      enabled: true
+      cluster_by:
+        - country_code
+        - segment

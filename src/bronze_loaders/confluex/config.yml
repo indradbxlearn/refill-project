@@ -1,0 +1,41 @@
+schema: bronze_confluex
+source_system: confluex
+
+# Entities we ingest from ALL sources
+entities:
+  - name: products_raw
+    primary_key: product_id
+  - name: users_raw
+    primary_key: user_id
+  - name: carts_raw
+    primary_key: cart_id
+
+# Volume source (multi-customer, multi-format)
+volume_source:
+  base_path_template: "/Volumes/{catalog}/landing/refill_arrivals/confluex/"
+
+# Lakeflow Connect source (S3 via managed pipeline)
+lakeflow_source:
+  schema: lakeflow_confluex
+  tables:
+    - entity: products_raw
+      table: products
+    - entity: users_raw
+      table: users
+    - entity: carts_raw
+      table: carts
+
+# REST API source (dummyjson)
+rest_api_source:
+  base_url: "https://dummyjson.com"
+  auth_endpoint: "/auth/login"
+  endpoints:
+    - entity: products_raw
+      path: "/auth/products"
+      response_key: products
+    - entity: users_raw
+      path: "/auth/users"
+      response_key: users
+    - entity: carts_raw
+      path: "/auth/carts"
+      response_key: carts
