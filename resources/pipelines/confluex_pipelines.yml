@@ -1,0 +1,46 @@
+resources:
+  pipelines:
+    # THE BRONZE PIPELINE
+    confluex_bronze_pipe:
+      name: "[${var.env}] Confluex Bronze Loader"
+      catalog: ${var.catalog_name}
+      target: bronze_confluex
+      serverless: true
+      libraries:
+        - notebook:
+            path: ../../src/bronze_loaders/confluex/loader.py
+      # ── Maven JARs removed ──────────────────────────────────────────────────
+      # spark-xml and spark-excel JARs cannot be installed on serverless
+      # (Permission Enforcing) clusters. XML and XLSX reading is now handled
+      # via openpyxl + lxml inside loader.py using %pip install.
+      # ────────────────────────────────────────────────────────────────────────
+      configuration:
+        bundle.catalog: ${var.catalog_name}
+        bundle.scope: confluex-scope
+      development: true
+
+    # THE SILVER PIPELINE
+    confluex_silver_pipe:
+      name: "[${var.env}] Confluex Silver Transformer"
+      catalog: ${var.catalog_name}
+      target: silver_confluex
+      serverless: true
+      libraries:
+        - notebook:
+            path: ../../src/silver_loaders/confluex/transformer.py
+      configuration:
+        bundle.catalog: ${var.catalog_name}
+      development: true
+
+    # THE GOLD PIPELINE
+    confluex_gold_pipe:
+      name: "[${var.env}] Confluex Gold Loader"
+      catalog: ${var.catalog_name}
+      target: gold_confluex
+      serverless: true
+      libraries:
+        - notebook:
+            path: ../../src/gold_loaders/confluex/gold_loader.py
+      configuration:
+        bundle.catalog: ${var.catalog_name}
+      development: true
